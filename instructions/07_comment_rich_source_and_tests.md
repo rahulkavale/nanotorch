@@ -1,0 +1,1 @@
+Acknowledged. We will keep source code and tests comment-rich, focusing on "why" and "how" rather than obvious statements. Comments should capture reasoning, tradeoffs, and theoretical context where helpful.

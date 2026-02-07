@@ -1,0 +1,1 @@
+Acknowledged. I will save the output of each of your questions in a `discovery/` folder, with a filename that captures your question in five words. I’ve also saved the previous response accordingly and will keep doing this going forward.

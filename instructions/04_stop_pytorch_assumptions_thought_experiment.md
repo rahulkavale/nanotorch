@@ -1,0 +1,1 @@
+Acknowledged. I will avoid reasoning in terms of PyTorch or other existing frameworks. We will proceed as a clean-slate thought experiment from first principles, as if we are pre-PyTorch and discovering the system solely from user needs and constraints.
