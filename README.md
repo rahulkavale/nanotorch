@@ -47,6 +47,25 @@ You can also run the console script:
 uv run nanotorch-plot
 ```
 
+## Interactive Step-Through (Notebook)
+We provide a Jupyter notebook that lets you scrub through training steps and see
+the model line evolve.
+
+```bash
+uv run jupyter lab
+```
+
+Open `notebooks/step_through_training.ipynb`.
+
+## Export Notebook to HTML
+You can export the interactive notebook to a static HTML file for sharing:
+
+```bash
+uv run python scripts/export_notebook_html.py
+```
+
+The output is saved to `artifacts/plots/step_through_training.html`.
+
 ## Repo Structure
 - `src/nanotorch/` — core library code
 - `tests/` — unit/integration/e2e tests
