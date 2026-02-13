@@ -33,6 +33,15 @@ We are in Sprint 0 and have the first integration tests for training on tiny dat
 uv run pytest -q
 ```
 
+## Generate Scenario Plots
+We generate plots from the same scenario registry used by tests, so the visuals
+always match the data and model definitions under test.
+
+```bash
+# Generate plots into artifacts/plots/
+uv run python scripts/plot_scenarios.py
+```
+
 ## Repo Structure
 - `src/nanotorch/` — core library code
 - `tests/` — unit/integration/e2e tests

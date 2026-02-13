@@ -1,10 +1,10 @@
 from nanotorch import manual_gradient, train
 
 
-def test_multi_point_linear_fit_no_bias(scenario_multi_point_no_bias):
-    # Multi-point case forces the training loop to aggregate loss/gradients
-    # across samples, not just a single point.
-    scenario = scenario_multi_point_no_bias
+def test_linear_fit_with_bias(scenario_with_bias):
+    # Adding a bias term introduces a second parameter to update.
+    # This test forces the training loop to handle multi-parameter gradients.
+    scenario = scenario_with_bias
     rule = manual_gradient(scenario.grad)
 
     history = train(
@@ -17,7 +17,7 @@ def test_multi_point_linear_fit_no_bias(scenario_multi_point_no_bias):
         lr=scenario.lr,
     )
 
-    # End-to-end decrease confirms learning on multiple samples.
     assert history[0] > history[-1]
-    # Slope should move toward the true value 2.
+    # Both parameters should move toward their expected values (w≈2, b≈1).
     assert scenario.params["w"] > 0.5
+    assert scenario.params["b"] > 0.2
