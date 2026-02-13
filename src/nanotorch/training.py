@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Callable, Dict, Iterable, Iterator, List, Tuple
+from typing import Callable, Dict, Iterable, Iterator, List, Sequence, Tuple
 
 
 Scalar = float
@@ -34,6 +34,8 @@ class StepState:
     params: Dict[str, Scalar]
     grads: Dict[str, Scalar]
 
+
+ObserverFn = Callable[[StepState], None]
 
 def manual_gradient(grad_fn: GradFn) -> RuleFn:
     """Wrap a user-supplied gradient function as a learning rule."""
@@ -93,6 +95,7 @@ def train(
     *,
     steps: int,
     lr: float,
+    observer: ObserverFn | Sequence[ObserverFn] | None = None,
 ) -> List[Scalar]:
     history: List[Scalar] = []
     # Materialize once so we can iterate multiple steps without re-consuming
@@ -105,7 +108,15 @@ def train(
         # contract "history length == steps" without inventing a loss value.
         return [0.0 for _ in range(steps)]
 
-    for _ in range(steps):
+    # Normalize observer to a list so we can call uniformly.
+    observers: List[ObserverFn] = []
+    if observer is not None:
+        if isinstance(observer, (list, tuple)):
+            observers = list(observer)
+        else:
+            observers = [observer]
+
+    for step in range(steps):
         total_loss = 0.0
         # We accumulate gradients across the dataset and average them so the
         # learning rate is stable w.r.t. dataset size (simple batch gradient).
@@ -129,7 +140,19 @@ def train(
 
         # We store mean loss per step to make "learning progress" observable
         # without requiring external logging in Sprint 0.
-        history.append(total_loss / n)
+        step_loss = total_loss / n
+        history.append(step_loss)
+
+        if observers:
+            # Emit a snapshot for visualization and debugging.
+            state = StepState(
+                step=step,
+                loss=step_loss,
+                params=dict(params),
+                grads=dict(grads_sum),
+            )
+            for obs in observers:
+                obs(state)
 
     return history
 
