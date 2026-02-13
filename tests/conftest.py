@@ -26,3 +26,8 @@ def scenario_with_bias():
 @pytest.fixture
 def scenario_constant_target():
     return get_scenario("constant_target")
+
+
+@pytest.fixture
+def scenario_noisy_linear():
+    return get_scenario("noisy_linear")

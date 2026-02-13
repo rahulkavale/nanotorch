@@ -141,11 +141,41 @@ def _constant_target() -> Scenario:
     )
 
 
+def _noisy_linear() -> Scenario:
+    # Slightly noisy points around y = 2x + 1 to model realistic data.
+    data = [(0.0, 1.1), (1.0, 2.9), (2.0, 5.2), (3.0, 7.0)]
+    params = {"w": 0.0, "b": 0.0}
+
+    def predict(x: Scalar, p: Params) -> Scalar:
+        return p["w"] * x + p["b"]
+
+    def loss(y_hat: Scalar, y: Scalar) -> Scalar:
+        return (y_hat - y) ** 2
+
+    def grad(x: Scalar, y: Scalar, y_hat: Scalar, p: Params) -> Dict[str, Scalar]:
+        err = y_hat - y
+        return {"w": 2 * err * x, "b": 2 * err}
+
+    return Scenario(
+        name="noisy_linear",
+        test_name="test_noisy_linear_data_decreases_loss",
+        description="Noisy linear data: loss should decrease but not reach zero.",
+        data=data,
+        params=params,
+        predict=predict,
+        loss=loss,
+        grad=grad,
+        steps=60,
+        lr=0.03,
+    )
+
+
 _SCENARIOS = {
     "single_point": _single_point,
     "multi_point_no_bias": _multi_point_no_bias,
     "with_bias": _with_bias,
     "constant_target": _constant_target,
+    "noisy_linear": _noisy_linear,
 }
 
 

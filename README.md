@@ -42,6 +42,11 @@ always match the data and model definitions under test.
 uv run python scripts/plot_scenarios.py
 ```
 
+You can also run the console script:
+```bash
+uv run nanotorch-plot
+```
+
 ## Repo Structure
 - `src/nanotorch/` — core library code
 - `tests/` — unit/integration/e2e tests
